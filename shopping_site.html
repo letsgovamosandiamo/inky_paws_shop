@@ -1,0 +1,1044 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creative Shop Showcase</title>
+  <style>
+    :root {
+      --bg-1: #fff7fb;
+      --bg-2: #fff1f7;
+      --surface: #ffffff;
+      --surface-soft: #fff7fb;
+      --text: #3b2142;
+      --muted: #7a5a74;
+      --accent: #b11f8f;
+      --accent-2: #d94bb3;
+      --accent-soft: #ffd8ef;
+      --chip: #ffe7f3;
+      --border: #f3cfe3;
+      --shadow: 0 18px 40px rgba(177, 31, 143, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", "Comic Sans", "Trebuchet MS", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #ffe5f4 0%, transparent 34%),
+        radial-gradient(circle at top right, #ffd9f0 0%, transparent 30%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .container {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 245, 251, 0.82);
+      border-bottom: 1px solid rgba(243, 207, 227, 0.9);
+    }
+
+    .topbar__inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .brand-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: white;
+      box-shadow: var(--shadow);
+      font-size: 1.25rem;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .icon-pill {
+      min-width: 46px;
+      height: 46px;
+      padding: 0 16px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(177, 31, 143, 0.08);
+    }
+
+    .hero {
+      padding: 26px 0 18px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 18px;
+    }
+
+    .hero-card,
+    .promo-card,
+    .section-shell,
+    .product-card,
+    .modal-dialog {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      border-radius: 34px;
+      padding: 30px;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 12% 16%, #ffe2f4 0%, transparent 24%),
+        linear-gradient(135deg, #ffffff 0%, #fff5fb 100%);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      bottom: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 75, 179, 0.22) 0%, rgba(217, 75, 179, 0) 72%);
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--chip);
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.04;
+      letter-spacing: 0.01em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn,
+    .buy-link,
+    .card-buy {
+      border: none;
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+      min-height: 48px;
+      padding: 12px 20px;
+      font-weight: 700;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .btn:active,
+    .buy-link:active,
+    .card-buy:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary,
+    .buy-link,
+    .card-buy {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: white;
+      box-shadow: 0 10px 24px rgba(177, 31, 143, 0.22);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .promo-card {
+      border-radius: 34px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(180deg, #fff9fd 0%, #fff0f8 100%);
+    }
+
+    .promo-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 1.65rem;
+      background: var(--accent-soft);
+      margin-bottom: 14px;
+    }
+
+    .promo-card h2 {
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+      line-height: 1.15;
+    }
+
+    .promo-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .promo-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .promo-tag {
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      background: white;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .catalog {
+      padding: 12px 0 64px;
+    }
+
+    .section-shell {
+      border-radius: 34px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .toolbar-left h2 {
+      margin: 0;
+      font-size: 1.55rem;
+    }
+
+    .toolbar-left p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(360px, 100%);
+    }
+
+    .search-wrap input {
+      width: 100%;
+      min-height: 52px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: white;
+      padding: 12px 18px 12px 48px;
+      outline: none;
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent-2);
+      box-shadow: 0 0 0 4px rgba(217, 75, 179, 0.12);
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      border-radius: 28px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 40px rgba(177, 31, 143, 0.16);
+    }
+
+    .product-image-wrap {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(180deg, #fff4fa 0%, #ffe8f5 100%);
+      overflow: hidden;
+    }
+
+    .product-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .badge {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.96);
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .fav-btn {
+      position: absolute;
+      right: 14px;
+      top: 14px;
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.96);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+    }
+
+    .product-content {
+      padding: 16px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .product-title {
+      margin: 0;
+      font-size: 1.12rem;
+      line-height: 1.25;
+    }
+
+    .product-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      min-height: 48px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .price {
+      font-size: 1.28rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .card-buy {
+      min-width: 118px;
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 32px 16px 12px;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(53, 18, 53, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 999;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      width: min(980px, 100%);
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, #fffdfd 0%, #fff6fb 100%);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.95);
+      font-size: 1.4rem;
+      cursor: pointer;
+      z-index: 4;
+    }
+
+    .modal-body {
+      display: grid;
+      grid-template-columns: 1.08fr 1fr;
+      min-height: 540px;
+    }
+
+    .modal-gallery {
+      position: relative;
+      background: linear-gradient(180deg, #fff2fa 0%, #ffe5f4 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .modal-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.92);
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-weight: 700;
+      z-index: 3;
+    }
+
+    .gallery-btn.prev {
+      left: 14px;
+    }
+
+    .gallery-btn.next {
+      right: 14px;
+    }
+
+    .gallery-dots {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+
+    .gallery-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(177, 31, 143, 0.12);
+    }
+
+    .gallery-dot.active {
+      background: white;
+      width: 24px;
+    }
+
+    .modal-info {
+      padding: 34px 28px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .modal-chip {
+      padding: 9px 13px;
+      border-radius: var(--radius-pill);
+      background: var(--chip);
+      color: var(--accent);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .modal-info h2 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.12;
+    }
+
+    .modal-price {
+      font-size: 1.55rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .modal-info p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .feature-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .feature-list li {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .buy-link {
+      width: 100%;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
+    }
+
+    .note {
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 940px) {
+      .hero-grid,
+      .modal-body {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-gallery {
+        min-height: 320px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar__inner,
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .topbar__inner,
+      .toolbar,
+      .card-meta {
+        flex-direction: column;
+      }
+
+      .top-actions,
+      .hero-buttons {
+        width: 100%;
+      }
+
+      .icon-pill,
+      .btn,
+      .card-buy,
+      .search-wrap,
+      .buy-link {
+        width: 100%;
+      }
+
+      .hero-card,
+      .promo-card,
+      .section-shell {
+        border-radius: 26px;
+      }
+
+      .modal-info {
+        padding: 24px 18px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand">
+        <span class="brand-badge">🛍️</span>
+        <!-- CHANGE SHOP NAME HERE -->
+        <span>My Resource Shop</span>
+      </div>
+
+      <div class="top-actions">
+        <!-- YOU CAN CHANGE THESE BUTTON LABELS OR REMOVE THEM -->
+        <div class="icon-pill">💖 Favorites</div>
+        <div class="icon-pill">✨ New</div>
+        <div class="icon-pill">🧺 Basket</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-card">
+        <div class="hero-kicker">🌸 Warm shop style</div>
+
+        <!-- CHANGE MAIN HEADING HERE -->
+        <h1>Beautiful classroom resources in one cozy showcase</h1>
+
+        <!-- CHANGE INTRO TEXT HERE -->
+        <p>
+          Browse your products like a real storefront. Each item opens in a detailed pop-up with a larger view,
+          image slider, full description, price, and a buy button that you can connect to any link you want.
+        </p>
+
+        <div class="hero-buttons">
+          <a class="btn btn-primary" href="#catalog">Shop now</a>
+          <a class="btn btn-secondary" href="#">About the products</a>
+        </div>
+      </div>
+
+      <aside class="promo-card">
+        <div>
+          <div class="promo-icon">🎀</div>
+          <h2>Storefront feel, but softer and warmer</h2>
+          <p>
+            Rounded shapes, pink-magenta accents, friendly icons, and a playful font give the page a cozy marketplace mood.
+          </p>
+        </div>
+
+        <div class="promo-tags">
+          <span class="promo-tag">💗 Rounded UI</span>
+          <span class="promo-tag">🖼️ Product cards</span>
+          <span class="promo-tag">🎠 Image carousel</span>
+          <span class="promo-tag">🛒 Custom buy links</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <main id="catalog" class="catalog">
+    <div class="container">
+      <section class="section-shell">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <h2>Shop Products</h2>
+            <p>Use the search box to filter your showcase items.</p>
+          </div>
+
+          <label class="search-wrap">
+            <span class="search-icon">🔎</span>
+            <input id="searchInput" type="text" placeholder="Search products..." />
+          </label>
+        </div>
+
+        <!-- PRODUCT CARDS WILL APPEAR HERE AUTOMATICALLY -->
+        <section id="productGrid" class="product-grid"></section>
+
+        <div id="emptyState" class="empty-state">No products found. Try a different search word.</div>
+
+        <p class="note">
+          <!-- CHANGE THIS NOTE IF NEEDED -->
+          Note: all Buy buttons currently use placeholder links. Replace each product’s <strong>buyLink</strong> value in the code with your own checkout, message, form, or marketplace link.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <!-- MODAL WINDOW -->
+  <div id="productModal" class="modal" aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="closeModal" aria-label="Close modal">✕</button>
+
+      <div class="modal-body">
+        <div class="modal-gallery">
+          <button class="gallery-btn prev" id="prevSlide" aria-label="Previous image">‹</button>
+          <img id="modalImage" src="" alt="Product image" />
+          <button class="gallery-btn next" id="nextSlide" aria-label="Next image">›</button>
+          <div id="galleryDots" class="gallery-dots"></div>
+        </div>
+
+        <div class="modal-info">
+          <div class="modal-chip-row">
+            <span class="modal-chip">💝 Featured</span>
+            <span class="modal-chip">📦 Digital product</span>
+          </div>
+
+          <h2 id="modalTitle"></h2>
+          <div id="modalPrice" class="modal-price"></div>
+          <p id="modalDescription"></p>
+          <ul id="modalFeatures" class="feature-list"></ul>
+
+          <!--
+            BUY BUTTON LINK
+            This button takes the link from each product object below.
+            Replace buyLink: "#" with your own URL.
+          -->
+          <a id="modalBuyLink" class="buy-link" href="#" target="_blank" rel="noopener noreferrer">Buy now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+      =====================================================
+      PRODUCT DATA
+      =====================================================
+      HOW TO EDIT PRODUCTS:
+      - title: product name shown on card and modal
+      - shortDescription: short text on product card
+      - fullDescription: longer text inside modal window
+      - price: product price
+      - badge: small label on the image corner
+      - cover: main product image on the card
+      - gallery: images for the modal carousel
+      - features: bullet-style list inside the modal
+      - buyLink: your own purchase/contact/checkout URL
+
+      IMAGE TIPS:
+      - You can use direct image links
+      - Or use local file paths like: images/product1.jpg
+      - Replace the sample images with your own product previews
+    */
+    const products = [
+      {
+        title: "ESL Lesson Pack: Travel English",
+        shortDescription: "Speaking tasks, worksheets, and slides for travel-themed ESL lessons.",
+        fullDescription:
+          "A ready-to-use classroom resource with speaking prompts, printable worksheets, vocabulary review, and presentation slides. Ideal for teachers who want a polished lesson with minimal prep time.",
+        price: "$12",
+        badge: "Best seller",
+        cover: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80"
+        ],
+        features: [
+          "Editable resource structure",
+          "Teacher-friendly layout",
+          "Suitable for digital or print use"
+        ],
+        buyLink: "#"
+      },
+      {
+        title: "Young Learners Activity Set",
+        shortDescription: "Colorful printable games and tasks for beginner English students.",
+        fullDescription:
+          "A playful classroom pack with engaging practice activities, matching games, visual prompts, and simple language support for younger learners. Great for group work and lively lesson stages.",
+        price: "$10",
+        badge: "Cute set",
+        cover: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=900&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80"
+        ],
+        features: [
+          "Beginner-friendly tasks",
+          "Bright visual design",
+          "Easy to adapt for different age groups"
+        ],
+        buyLink: "#"
+      },
+      {
+        title: "Interactive Quiz Game Template",
+        shortDescription: "HTML classroom game template you can customize with your own questions.",
+        fullDescription:
+          "A simple but attractive digital game template for educational use. Replace the sample questions with your own material and use it for revision, homework, or lesson warm-ups.",
+        price: "$18",
+        badge: "Digital file",
+        cover: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80"
+        ],
+        features: [
+          "Single-file HTML format",
+          "Quick to personalize",
+          "Useful for online and in-class teaching"
+        ],
+        buyLink: "#"
+      },
+      {
+        title: "Printable Drama Lesson Bundle",
+        shortDescription: "Role cards, scripts, and speaking activities for drama-based learning.",
+        fullDescription:
+          "This bundle includes printable role cards, mini scripts, scene prompts, and discussion tasks designed to build confidence, speaking fluency, and classroom energy.",
+        price: "$15",
+        badge: "Popular",
+        cover: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80",
+        gallery: [
+          "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1517164850305-99a3e65bb47e?auto=format&fit=crop&w=1200&q=80",
+          "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80"
+        ],
+        features: [
+          "Speaking-centered activities",
+          "Printable classroom materials",
+          "Suitable for pair and group interaction"
+        ],
+        buyLink: "#"
+      }
+    ];
+
+    const productGrid = document.getElementById('productGrid');
+    const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const modal = document.getElementById('productModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalFeatures = document.getElementById('modalFeatures');
+    const modalBuyLink = document.getElementById('modalBuyLink');
+    const modalImage = document.getElementById('modalImage');
+    const prevSlideBtn = document.getElementById('prevSlide');
+    const nextSlideBtn = document.getElementById('nextSlide');
+    const galleryDots = document.getElementById('galleryDots');
+
+    let visibleProducts = [...products];
+    let activeProductIndex = 0;
+    let activeSlideIndex = 0;
+
+    function renderProducts(list) {
+      productGrid.innerHTML = '';
+
+      if (!list.length) {
+        emptyState.style.display = 'block';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+
+      list.forEach((product, index) => {
+        const card = document.createElement('article');
+        card.className = 'product-card';
+
+        card.innerHTML = `
+          <div class="product-image-wrap">
+            <span class="badge">${product.badge}</span>
+            <button class="fav-btn" type="button" aria-label="Favorite">💗</button>
+            <img class="product-image" src="${product.cover}" alt="${product.title}">
+          </div>
+          <div class="product-content">
+            <h3 class="product-title">${product.title}</h3>
+            <p class="product-desc">${product.shortDescription}</p>
+            <div class="card-meta">
+              <span class="price">${product.price}</span>
+              <button class="card-buy" type="button" data-index="${index}">Buy</button>
+            </div>
+          </div>
+        `;
+
+        productGrid.appendChild(card);
+      });
+
+      document.querySelectorAll('.card-buy').forEach(button => {
+        button.addEventListener('click', () => {
+          const index = Number(button.dataset.index);
+          openModal(index);
+        });
+      });
+    }
+
+    function openModal(productIndex) {
+      activeProductIndex = productIndex;
+      activeSlideIndex = 0;
+      updateModalContent();
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function updateModalContent() {
+      const product = visibleProducts[activeProductIndex];
+      if (!product) return;
+
+      const currentImage = product.gallery[activeSlideIndex];
+      modalTitle.textContent = product.title;
+      modalPrice.textContent = product.price;
+      modalDescription.textContent = product.fullDescription;
+      modalBuyLink.href = product.buyLink;
+      modalImage.src = currentImage;
+      modalImage.alt = `${product.title} image ${activeSlideIndex + 1}`;
+
+      modalFeatures.innerHTML = product.features
+        .map(feature => `<li>✨ ${feature}</li>`)
+        .join('');
+
+      renderDots(product.gallery.length);
+    }
+
+    function renderDots(total) {
+      galleryDots.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'gallery-dot' + (i === activeSlideIndex ? ' active' : '');
+        galleryDots.appendChild(dot);
+      }
+    }
+
+    function nextSlide() {
+      const gallery = visibleProducts[activeProductIndex].gallery;
+      activeSlideIndex = (activeSlideIndex + 1) % gallery.length;
+      updateModalContent();
+    }
+
+    function prevSlide() {
+      const gallery = visibleProducts[activeProductIndex].gallery;
+      activeSlideIndex = (activeSlideIndex - 1 + gallery.length) % gallery.length;
+      updateModalContent();
+    }
+
+    function filterProducts() {
+      const query = searchInput.value.trim().toLowerCase();
+
+      visibleProducts = products.filter(product => {
+        const combined = [
+          product.title,
+          product.shortDescription,
+          product.fullDescription,
+          product.price,
+          product.badge,
+          ...(product.features || [])
+        ].join(' ').toLowerCase();
+
+        return combined.includes(query);
+      });
+
+      renderProducts(visibleProducts);
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    nextSlideBtn.addEventListener('click', nextSlide);
+    prevSlideBtn.addEventListener('click', prevSlide);
+    searchInput.addEventListener('input', filterProducts);
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    renderProducts(visibleProducts);
+  </script>
+</body>
+</html>
