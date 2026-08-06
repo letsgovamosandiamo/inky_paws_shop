@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mosaic Mystery — assemble the scene, find the clue, and solve the case." />
+  <title>Mosaic Mystery | Inky Paws Games</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="game-header">
+    <a class="brand" href="../index.html" aria-label="Back to Games Library">
+      <span class="brand-mark" aria-hidden="true">🧩</span>
+      <span>Mosaic Mystery</span>
+    </a>
+    <span id="levelLabel" class="level-label" hidden>Level 1</span>
+  </header>
+
+  <main class="game-shell">
+    <!-- Start screen -->
+    <section id="startScreen" class="screen start-screen active" aria-labelledby="gameTitle">
+      <div class="start-copy">
+        <span class="eyebrow">A cozy puzzle case</span>
+        <h1 id="gameTitle">Mosaic Mystery</h1>
+        <p>Assemble the scene. Find the clue. Solve the case.</p>
+        <div class="button-stack">
+          <button id="startButton" class="button button-primary" type="button">Start Game</button>
+          <button id="howButton" class="button button-secondary" type="button">How to Play</button>
+          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+        </div>
+      </div>
+      <div class="start-art" aria-hidden="true">
+        <div class="mosaic-orbit">
+          <span class="main-tile">☕</span>
+          <span class="mini-tile tile-one">?</span>
+          <span class="mini-tile tile-two">✦</span>
+          <span class="mini-tile tile-three">🔎</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reusable game stage. JavaScript changes its content for every level. -->
+    <section id="gameScreen" class="screen game-screen" aria-live="polite">
+      <div class="progress" aria-label="Case progress">
+        <span class="progress-step active" data-progress="puzzle">1 <b>Puzzle</b></span>
+        <span class="progress-line"></span>
+        <span class="progress-step" data-progress="clue">2 <b>Clue</b></span>
+        <span class="progress-line"></span>
+        <span class="progress-step" data-progress="question">3 <b>Solve</b></span>
+      </div>
+
+      <div class="stage-card">
+        <div class="stage-heading">
+          <span id="stageKicker" class="eyebrow">Rebuild the evidence</span>
+          <h2 id="stageTitle">Assemble the scene</h2>
+          <p id="stageInstruction">Select two tiles to swap them, or drag one tile onto another.</p>
+        </div>
+
+        <div id="puzzleStage" class="stage-panel active">
+          <div id="puzzleBoard" class="puzzle-board" aria-label="Four by four picture puzzle"></div>
+          <p id="puzzleFeedback" class="feedback" role="status"></p>
+          <button id="puzzleContinue" class="button button-primary continue-button" type="button" disabled>Continue</button>
+        </div>
+
+        <div id="clueStage" class="stage-panel">
+          <div id="clueScene" class="clue-scene" aria-label="Completed mystery scene"></div>
+          <p id="clueFeedback" class="feedback" role="status">Study the scene and click the important clue.</p>
+          <button id="clueContinue" class="button button-primary continue-button" type="button" disabled>Continue</button>
+        </div>
+
+        <div id="questionStage" class="stage-panel">
+          <form id="questionForm" class="question-form">
+            <fieldset>
+              <legend id="questionText"></legend>
+              <div id="answersList" class="answers-list"></div>
+            </fieldset>
+            <p id="questionFeedback" class="feedback" role="status"></p>
+            <button id="checkAnswer" class="button button-secondary" type="submit">Check Answer</button>
+            <button id="questionContinue" class="button button-primary continue-button" type="button" disabled>Continue</button>
+          </form>
+        </div>
+
+        <div id="explanationStage" class="stage-panel explanation-panel">
+          <div class="explanation-icon" aria-hidden="true">💡</div>
+          <span class="eyebrow">Mystery explained</span>
+          <h2>The clue makes sense!</h2>
+          <p id="explanationText"></p>
+          <button id="finishCase" class="button button-primary" type="button">Solve the Case</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Finish screen -->
+    <section id="finishScreen" class="screen finish-screen" aria-labelledby="solvedTitle">
+      <div class="solved-badge" aria-hidden="true">✓</div>
+      <span class="eyebrow">Wonderful detective work</span>
+      <h2 id="solvedTitle">Case Solved!</h2>
+      <p id="solvedMessage">You assembled the evidence and uncovered the truth.</p>
+      <div class="button-stack finish-actions">
+        <button id="nextLevelButton" class="button button-primary" type="button" hidden>Next Level</button>
+        <button id="playAgainButton" class="button button-secondary" type="button">Play Again</button>
+        <a class="button button-ghost" href="../index.html">← Back to Games</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- How-to-play dialog -->
+  <div id="howModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+      <button id="closeHowButton" class="modal-close" type="button" aria-label="Close instructions">×</button>
+      <span class="eyebrow">Your mission</span>
+      <h2 id="howTitle">How to Play</h2>
+      <ol>
+        <li>Assemble the picture.</li>
+        <li>Study the completed scene.</li>
+        <li>Click the important clue.</li>
+        <li>Choose the correct explanation.</li>
+        <li>Continue to the next mystery.</li>
+      </ol>
+      <button id="understoodButton" class="button button-primary" type="button">Got it!</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

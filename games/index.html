@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explore playful games from Inky Paws." />
+  <title>Games | Inky Paws</title>
+  <style>
+    :root {
+      --bg-1: #fff7fb;
+      --bg-2: #fff1f7;
+      --surface: #ffffff;
+      --surface-soft: #fff7fb;
+      --text: #3b2142;
+      --muted: #7a5a74;
+      --accent: #b11f8f;
+      --accent-2: #d94bb3;
+      --accent-soft: #ffd8ef;
+      --chip: #ffe7f3;
+      --border: #f3cfe3;
+      --shadow: 0 18px 40px rgba(177, 31, 143, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: "Comic Sans MS", "Comic Sans", "Trebuchet MS", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #ffe5f4 0%, transparent 34%),
+        radial-gradient(circle at top right, #ffd9f0 0%, transparent 30%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(243, 207, 227, 0.9);
+      background: rgba(255, 245, 251, 0.82);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .brand-badge {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+    }
+
+    .home-link,
+    .play-button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .home-link {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 8px 20px rgba(177, 31, 143, 0.08);
+    }
+
+    .home-link:hover,
+    .home-link:focus-visible,
+    .play-button:hover,
+    .play-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(177, 31, 143, 0.18);
+    }
+
+    .home-link:focus-visible,
+    .play-button:focus-visible {
+      outline: 3px solid var(--accent-soft);
+      outline-offset: 3px;
+    }
+
+    main {
+      padding: 26px 0 48px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: 430px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 32px;
+      padding: clamp(34px, 6vw, 72px);
+      border: 1px solid var(--border);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 12% 16%, #ffe2f4 0%, transparent 24%),
+        linear-gradient(135deg, #ffffff 0%, #fff5fb 100%);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      bottom: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(217, 75, 179, 0.22), transparent 72%);
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      padding: 10px 16px;
+      border-radius: var(--radius-pill);
+      color: var(--accent);
+      background: var(--chip);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 16px 0 12px;
+      max-width: 760px;
+      font-size: clamp(3rem, 7vw, 5.7rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.06rem;
+      line-height: 1.7;
+    }
+
+    .hero-art {
+      position: relative;
+      z-index: 1;
+      min-height: 290px;
+      display: grid;
+      place-items: center;
+    }
+
+    .hero-orbit {
+      width: min(100%, 320px);
+      aspect-ratio: 1;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(177, 31, 143, 0.16);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.52);
+      box-shadow: inset 0 0 60px rgba(217, 75, 179, 0.09);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .hero-orbit::before,
+    .hero-orbit::after {
+      content: "";
+      position: absolute;
+      border: 1px dashed rgba(177, 31, 143, 0.22);
+      border-radius: 50%;
+    }
+
+    .hero-orbit::before { inset: 32px; }
+    .hero-orbit::after { inset: 68px; }
+
+    .hero-symbol {
+      position: relative;
+      z-index: 2;
+      width: 118px;
+      height: 118px;
+      display: grid;
+      place-items: center;
+      border: 8px solid white;
+      border-radius: 36px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 24px 46px rgba(177, 31, 143, 0.28);
+      font-size: 3.8rem;
+      transform: rotate(-7deg);
+    }
+
+    .orbit-dot {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: 5px solid white;
+      border-radius: 18px;
+      background: var(--chip);
+      box-shadow: 0 12px 26px rgba(177, 31, 143, 0.16);
+      font-size: 1.4rem;
+    }
+
+    .orbit-dot.one { top: 24px; right: 32px; transform: rotate(10deg); }
+    .orbit-dot.two { bottom: 28px; left: 24px; transform: rotate(-12deg); }
+    .orbit-dot.three { top: 76px; left: -8px; transform: rotate(7deg); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .games-section {
+      margin-top: 18px;
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading {
+      margin: 0;
+      font-size: 1.65rem;
+    }
+
+    .section-intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-intro p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .game-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: 0 12px 28px rgba(177, 31, 143, 0.1);
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(177, 31, 143, 0.28);
+      box-shadow: 0 24px 46px rgba(177, 31, 143, 0.18);
+    }
+
+    .game-illustration {
+      min-height: 250px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.95), transparent 26%),
+        linear-gradient(145deg, var(--accent-soft), #fff7fc 66%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .game-illustration::before {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      border: 1px dashed rgba(177, 31, 143, 0.24);
+      border-radius: 50%;
+      transition: transform 0.55s ease;
+    }
+
+    .game-card:hover .game-illustration::before {
+      transform: rotate(24deg) scale(1.08);
+    }
+
+    .art-tile {
+      position: relative;
+      z-index: 2;
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      border: 7px solid white;
+      border-radius: 32px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 22px 40px rgba(177, 31, 143, 0.25);
+      font-size: 3.2rem;
+      transform: rotate(-5deg);
+      transition: transform 0.35s ease;
+    }
+
+    .game-card:hover .art-tile {
+      transform: rotate(0deg) scale(1.06);
+    }
+
+    .art-piece {
+      position: absolute;
+      z-index: 1;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 4px solid white;
+      border-radius: 14px;
+      color: var(--accent);
+      background: white;
+      box-shadow: 0 10px 20px rgba(177, 31, 143, 0.13);
+      font-weight: 700;
+      transition: transform 0.35s ease;
+    }
+
+    .art-piece.left { left: 18%; top: 25%; transform: rotate(-12deg); }
+    .art-piece.right { right: 17%; bottom: 20%; transform: rotate(12deg); }
+
+    .game-card:hover .art-piece.left { transform: translate(-4px, -4px) rotate(-18deg); }
+    .game-card:hover .art-piece.right { transform: translate(4px, 4px) rotate(18deg); }
+
+    .category {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      margin-bottom: 13px;
+      border-radius: var(--radius-pill);
+      color: var(--accent);
+      background: var(--chip);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .game-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 22px;
+    }
+
+    .game-content h2 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+    }
+
+    .game-content p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .play-button {
+      width: 100%;
+      margin-top: auto;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 22px rgba(177, 31, 143, 0.2);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-art {
+        min-height: 250px;
+      }
+
+      .game-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .home-link {
+        width: 100%;
+      }
+
+      .hero,
+      .games-section {
+        padding: 22px;
+        border-radius: 26px;
+      }
+
+      .hero-art {
+        display: none;
+      }
+
+      .hero {
+        min-height: 360px;
+      }
+
+      .section-intro {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .game-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="brand-badge" aria-hidden="true">🎮</span>
+        <span>Inky Paws Games</span>
+      </div>
+      <a class="home-link" href="../index.html">← Back to homepage</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <span class="hero-kicker">✨ Play, think, create</span>
+          <h1 id="page-title">Games Library</h1>
+          <p>A hand-picked collection of playful challenges designed to spark curiosity, creative thinking, and a little everyday magic.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-orbit">
+            <div class="hero-symbol">🎮</div>
+            <span class="orbit-dot one">✦</span>
+            <span class="orbit-dot two">🎲</span>
+            <span class="orbit-dot three">◆</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="games-section" aria-labelledby="games-heading">
+        <div class="section-intro">
+          <h2 class="section-heading" id="games-heading">Choose your next challenge</h2>
+          <p>Three distinct worlds, each with its own way to test your imagination and skills.</p>
+        </div>
+
+        <div class="game-grid">
+          <article class="game-card">
+            <div class="game-illustration" role="img" aria-label="Abstract puzzle illustration for Mosaic Mystery">
+              <span class="art-piece left">◆</span>
+              <span class="art-tile">🧩</span>
+              <span class="art-piece right">✦</span>
+            </div>
+            <div class="game-content">
+              <span class="category">Puzzle</span>
+              <h2>Mosaic Mystery</h2>
+              <p>Piece together colorful clues and uncover the picture hiding in every puzzle.</p>
+              <a class="play-button" href="mosaic-mystery/index.html" aria-label="Play Mosaic Mystery">▶ Play</a>
+            </div>
+          </article>
+
+          <article class="game-card">
+            <div class="game-illustration" role="img" aria-label="Abstract route illustration for Secret Path">
+              <span class="art-piece left">●</span>
+              <span class="art-tile">🗺️</span>
+              <span class="art-piece right">➜</span>
+            </div>
+            <div class="game-content">
+              <span class="category">Logic</span>
+              <h2>Secret Path</h2>
+              <p>Follow hidden hints, choose each step carefully, and find your way to the finish.</p>
+              <a class="play-button" href="#" aria-label="Play Secret Path">▶ Play</a>
+            </div>
+          </article>
+
+          <article class="game-card">
+            <div class="game-illustration" role="img" aria-label="Abstract building illustration for Dice Architect">
+              <span class="art-piece left">▦</span>
+              <span class="art-tile">🎲</span>
+              <span class="art-piece right">▲</span>
+            </div>
+            <div class="game-content">
+              <span class="category">Strategy</span>
+              <h2>Dice Architect</h2>
+              <p>Roll the dice, gather your pieces, and build a brilliant creation one turn at a time.</p>
+              <a class="play-button" href="#" aria-label="Play Dice Architect">▶ Play</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
