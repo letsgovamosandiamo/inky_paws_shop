@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dice Architect — build the world, follow the rules, and solve the layout." />
+  <title>Dice Architect | Inky Paws Games</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="game-header">
+    <a class="brand" href="../index.html" aria-label="Back to Games Library">
+      <span class="brand-mark" aria-hidden="true">DA</span>
+      <span>Dice Architect</span>
+    </a>
+    <span id="levelLabel" class="level-label">Level 1</span>
+  </header>
+
+  <main class="game-shell">
+    <section id="startScreen" class="screen start-screen active" aria-labelledby="gameTitle">
+      <div class="start-copy">
+        <span class="eyebrow">A creative logic challenge</span>
+        <h1 id="gameTitle">Dice Architect</h1>
+        <p>Build the world. Follow the rules. Solve the layout.</p>
+        <div class="button-stack">
+          <button id="startButton" class="button button-primary" type="button">Start Game</button>
+          <button id="howButton" class="button button-secondary" type="button">How to Play</button>
+          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+        </div>
+      </div>
+      <div class="start-art" aria-hidden="true">
+        <div class="architect-orbit">
+          <span class="blueprint-tile main-tile"><i></i><i></i><i></i><i></i></span>
+          <span class="mini-block block-one"></span>
+          <span class="mini-block block-two"></span>
+          <span class="mini-block block-three"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen" aria-live="polite">
+      <div class="stage-heading">
+        <span id="themeLabel" class="eyebrow"></span>
+        <h2 id="levelTitle"></h2>
+        <p>Drag every object onto the board, then check your layout.</p>
+      </div>
+
+      <div class="play-layout">
+        <aside class="rules-card" aria-labelledby="rulesHeading">
+          <h3 id="rulesHeading">Building Rules</h3>
+          <ol id="rulesList"></ol>
+        </aside>
+
+        <div class="workspace">
+          <div id="board" class="board" aria-label="Five by five building board"></div>
+          <div class="action-row">
+            <button id="resetButton" class="button button-secondary" type="button">Reset</button>
+            <button id="checkButton" class="button button-primary" type="button">Check Layout</button>
+          </div>
+          <p id="feedback" class="feedback" role="status"></p>
+        </div>
+
+        <aside class="tray-card" aria-labelledby="trayHeading">
+          <div class="tray-heading">
+            <h3 id="trayHeading">Object Tiles</h3>
+            <span id="placedCount">0 / 0</span>
+          </div>
+          <div id="tileTray" class="tile-tray" aria-label="Object tile tray"></div>
+          <p>Drag placed tiles back here to return them.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="completeScreen" class="screen complete-screen" aria-labelledby="completeTitle">
+      <div class="complete-mark" aria-hidden="true">✓</div>
+      <span class="eyebrow">Blueprint approved</span>
+      <h2 id="completeTitle">Level Complete</h2>
+      <p id="successText"></p>
+      <div class="button-stack centered-actions">
+        <button id="nextButton" class="button button-primary" type="button">Next Level</button>
+      </div>
+    </section>
+
+    <section id="endingScreen" class="screen complete-screen" aria-labelledby="endingTitle">
+      <div class="complete-mark master-mark" aria-hidden="true">★</div>
+      <span class="eyebrow">Every blueprint approved</span>
+      <h2 id="endingTitle">MASTER ARCHITECT</h2>
+      <p>All three layouts completed.</p>
+      <div class="button-stack centered-actions">
+        <button id="playAgainButton" class="button button-primary" type="button">Play Again</button>
+        <a class="button button-ghost" href="../index.html">← Back to Games</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="howModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="howTitle">
+      <button id="closeHowButton" class="modal-close" type="button" aria-label="Close instructions">×</button>
+      <span class="eyebrow">Your blueprint</span>
+      <h2 id="howTitle">How to Play</h2>
+      <p>Build the correct layout by following every rule.</p>
+      <ol>
+        <li>Read the building rules carefully.</li>
+        <li>Drag the picture tiles onto the board.</li>
+        <li>Place every required object.</li>
+        <li>Make sure all rules are satisfied.</li>
+        <li>Press Check Layout when you are ready.</li>
+      </ol>
+      <p>If something is wrong, fix the layout and try again.</p>
+      <button id="understoodButton" class="button button-primary" type="button">Got it!</button>
+    </div>
+  </div>
+
+  <script src="sound-manager.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
