@@ -70,6 +70,19 @@ const levels = [
   }
 ];
 
+const soundManager = new SoundManager({
+  basePath: "assets/sounds/",
+  sounds: {
+    piece: "piece.ogg",
+    correct: "correct.ogg",
+    wrong: "wrong.ogg",
+    clue: "clue.ogg",
+    victory: "victory.ogg",
+    next: "next.ogg",
+    button: "button.ogg"
+  }
+});
+
 const screens = {
   start: document.getElementById("startScreen"),
   game: document.getElementById("gameScreen"),
@@ -225,9 +238,15 @@ function dropPiece(event) {
 }
 
 function swapPieces(first, second) {
+  const firstWasCorrect = pieceOrder[first] === first;
+  const secondWasCorrect = pieceOrder[second] === second;
   [pieceOrder[first], pieceOrder[second]] = [pieceOrder[second], pieceOrder[first]];
   selectedPiece = null;
   renderPuzzle();
+  if ((!firstWasCorrect && pieceOrder[first] === first) ||
+      (!secondWasCorrect && pieceOrder[second] === second)) {
+    soundManager.play("piece");
+  }
   if (pieceOrder.every((value, index) => value === index)) {
     puzzleFeedback.textContent = "Puzzle Complete!";
     puzzleFeedback.className = "feedback success";
@@ -258,6 +277,7 @@ function setupClueStage() {
 
 function checkHotspot(hotspot, isCorrect) {
   if (isCorrect) {
+    soundManager.play("clue");
     clueFeedback.textContent = "Good observation!";
     clueFeedback.className = "feedback success";
     clueContinue.disabled = false;
@@ -290,10 +310,12 @@ function checkAnswer(event) {
   event.preventDefault();
   const selected = questionForm.querySelector("input[name='answer']:checked");
   if (!selected || Number(selected.value) !== levels[currentLevelIndex].correctAnswer) {
+    if (selected) soundManager.play("wrong");
     questionFeedback.textContent = "Not quite. Try again.";
     questionFeedback.className = "feedback";
     return;
   }
+  soundManager.play("correct");
   questionFeedback.textContent = "Correct!";
   questionFeedback.className = "feedback success";
   questionContinue.disabled = false;
@@ -306,6 +328,7 @@ function finishLevel() {
   nextLevelButton.hidden = !hasNextLevel;
   document.getElementById("solvedMessage").textContent = `You solved Level ${currentLevelIndex + 1}: ${levels[currentLevelIndex].title}.`;
   showScreen("finish");
+  soundManager.play("victory");
 }
 
 function openHowModal() {
@@ -334,4 +357,12 @@ questionForm.addEventListener("submit", checkAnswer);
 questionContinue.addEventListener("click", () => showPanel("explanation"));
 document.getElementById("finishCase").addEventListener("click", finishLevel);
 document.getElementById("playAgainButton").addEventListener("click", () => startLevel(currentLevelIndex));
-nextLevelButton.addEventListener("click", () => startLevel(currentLevelIndex + 1));
+nextLevelButton.addEventListener("click", () => {
+  soundManager.play("next");
+  startLevel(currentLevelIndex + 1);
+});
+document.addEventListener("click", event => {
+  if (event.target instanceof Element && event.target.closest("button")) {
+    soundManager.play("button");
+  }
+});
