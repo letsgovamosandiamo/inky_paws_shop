@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Secret Path — investigate every clue and choose the safest route." />
+  <title>Secret Path | Inky Paws Games</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="game-header">
+    <a class="brand" href="../index.html" aria-label="Back to Games Library">
+      <span class="brand-mark" aria-hidden="true">🗺️</span>
+      <span>Secret Path</span>
+    </a>
+    <span id="levelLabel" class="level-label">Level 1</span>
+  </header>
+
+  <main class="game-shell">
+    <section id="storyScreen" class="screen story-screen active" aria-labelledby="storyTitle">
+      <div class="story-copy">
+        <span class="eyebrow">A clue-filled adventure</span>
+        <h1 id="storyTitle">Secret Path</h1>
+        <p id="storyText">Explore the scene. Follow the clues. Choose the safest route.</p>
+        <div class="button-stack">
+          <button id="startButton" class="button button-primary" type="button">Start Game</button>
+          <button id="rulesButton" class="button button-secondary" type="button">How to Play</button>
+          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+        </div>
+      </div>
+      <div class="story-art" aria-hidden="true">
+        <div class="route-orbit"><span class="route-icon">🧭</span><span class="route-dot dot-one">?</span><span class="route-dot dot-two">✦</span><span class="route-dot dot-three">➜</span></div>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen" aria-live="polite">
+      <div class="stage-heading">
+        <span class="eyebrow">Explore the location</span>
+        <h2 id="missionTitle"></h2>
+        <p id="missionInstruction"></p>
+      </div>
+
+      <div class="game-layout">
+        <div id="scene" class="scene">
+          <img id="sceneImage" class="scene-image" alt="" />
+          <div id="hotspots"></div>
+        </div>
+
+        <aside class="clue-panel" aria-labelledby="cluePanelTitle">
+          <div class="clue-progress"><span id="cluePanelTitle">Clues collected</span><strong id="clueCount">0 / 0</strong></div>
+          <div id="latestClue" class="latest-clue" role="status">Choose a marked location to investigate.</div>
+          <ul id="clueList" class="clue-list"></ul>
+        </aside>
+      </div>
+
+      <form id="questionForm" class="question-card" hidden>
+        <fieldset>
+          <legend id="questionText"></legend>
+          <div id="answersList" class="answers-list"></div>
+        </fieldset>
+        <p id="answerFeedback" class="feedback" role="status"></p>
+        <button class="button button-primary" type="submit">Check Route</button>
+      </form>
+    </section>
+
+    <section id="successScreen" class="screen success-screen" aria-labelledby="successTitle">
+      <div class="success-badge" aria-hidden="true">✓</div>
+      <span id="successKicker" class="eyebrow">Safe route found</span>
+      <h2 id="successTitle">Mission Solved!</h2>
+      <p id="explanationText"></p>
+      <p id="scoreText" class="score-text"></p>
+      <div class="button-stack success-actions">
+        <button id="nextButton" class="button button-primary" type="button">Next Level</button>
+        <a class="button button-ghost" href="../index.html">← Back to Games</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="rulesModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+      <button id="closeRulesButton" class="modal-close" type="button" aria-label="Close rules">×</button>
+      <span class="eyebrow">Your mission</span>
+      <h2 id="rulesTitle">How to Play</h2>
+      <p>Find the safest way forward by following the clues.</p>
+      <ol>
+        <li>Explore the scene carefully.</li>
+        <li>Click on important places to reveal clues.</li>
+        <li>Read every clue before making your decision.</li>
+        <li>Choose the safest route.</li>
+        <li>Complete all three missions to finish the adventure.</li>
+      </ol>
+      <p>Every clue matters. Think before you choose!</p>
+      <button id="understoodButton" class="button button-primary" type="button">Got it!</button>
+    </div>
+  </div>
+
+  <script src="sound-manager.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
