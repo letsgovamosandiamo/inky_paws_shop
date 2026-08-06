@@ -5,33 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Mosaic Mystery — assemble the scene, find the clue, and solve the case." />
   <title>Mosaic Mystery | Inky Paws Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="game-header">
     <a class="brand" href="../index.html" aria-label="Back to Games Library">
-      <span class="brand-mark" aria-hidden="true">🧩</span>
+      <span class="brand-mark" aria-hidden="true"><img src="../assets/icons/mosaic-mystery-icon.png" alt="" /></span>
       <span>Mosaic Mystery</span>
     </a>
-    <span id="levelLabel" class="level-label" hidden>Level 1</span>
+    <span id="levelLabel" class="level-label" hidden>CASE 01</span>
   </header>
 
   <main class="game-shell">
     <!-- Start screen -->
     <section id="startScreen" class="screen start-screen active" aria-labelledby="gameTitle">
       <div class="start-copy">
-        <span class="eyebrow">A cozy puzzle case</span>
+        <span class="eyebrow">CASE FILE #001</span>
         <h1 id="gameTitle">Mosaic Mystery</h1>
         <p>Assemble the scene. Find the clue. Solve the case.</p>
         <div class="button-stack">
-          <button id="startButton" class="button button-primary" type="button">Start Game</button>
-          <button id="howButton" class="button button-secondary" type="button">How to Play</button>
-          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+          <button id="startButton" class="button button-primary" type="button">Begin Investigation</button>
+          <button id="howButton" class="button button-secondary" type="button">Case Notes</button>
+          <a class="button button-ghost" href="../index.html">← Return to Archive</a>
         </div>
       </div>
       <div class="start-art" aria-hidden="true">
         <div class="mosaic-orbit">
-          <span class="main-tile">☕</span>
+          <span class="main-tile"><img src="../assets/icons/mosaic-mystery-icon.png" alt="" /></span>
           <span class="mini-tile tile-one">?</span>
           <span class="mini-tile tile-two">✦</span>
           <span class="mini-tile tile-three">🔎</span>
@@ -108,8 +111,8 @@
   <div id="howModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="howTitle">
       <button id="closeHowButton" class="modal-close" type="button" aria-label="Close instructions">×</button>
-      <span class="eyebrow">Your mission</span>
-      <h2 id="howTitle">How to Play</h2>
+      <span class="eyebrow">Investigator Briefing</span>
+      <h2 id="howTitle">Case Notes</h2>
       <ol>
         <li>Assemble the picture.</li>
         <li>Study the completed scene.</li>

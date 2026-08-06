@@ -20,6 +20,57 @@
   --radius-pill: 999px;
 }
 
+/* Case-file theme, scoped to the landing screen and its notes dialog. */
+body:has(#startScreen.active) {
+  --bg-1: #f3ead6;
+  --bg-2: #e7dac0;
+  --surface: #fbf5e8;
+  --surface-soft: #f4ead6;
+  --text: #3d2b20;
+  --muted: #725f4e;
+  --accent: #7b2935;
+  --accent-2: #963b47;
+  --accent-soft: #ddc2b8;
+  --chip: #eadcc4;
+  --border: #c8b494;
+  --shadow: 0 16px 34px rgba(61, 43, 32, 0.16);
+  background-color: var(--bg-1);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(86, 62, 42, 0.025) 0, rgba(86, 62, 42, 0.025) 1px, transparent 1px, transparent 4px),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+}
+
+body:has(#startScreen.active) .brand,
+body:has(#startScreen.active) .level-label,
+#startScreen h1,
+#startScreen .eyebrow,
+#startScreen .button,
+body:has(#startScreen.active) .modal-card h2,
+body:has(#startScreen.active) .modal-card .eyebrow,
+body:has(#startScreen.active) .modal-card .button {
+  font-family: "Special Elite", cursive;
+  letter-spacing: 0;
+}
+
+#startScreen {
+  border-radius: 8px;
+  background-color: rgba(251, 245, 232, 0.94);
+  background-image: repeating-linear-gradient(0deg, rgba(86, 62, 42, 0.022) 0, rgba(86, 62, 42, 0.022) 1px, transparent 1px, transparent 5px);
+}
+
+#startScreen .eyebrow,
+body:has(#startScreen.active) .level-label {
+  border: 1px solid rgba(123, 41, 53, 0.55);
+  border-radius: 3px;
+  background: transparent;
+  transform: rotate(-1deg);
+}
+
+#startScreen .button,
+body:has(#startScreen.active) .modal-card .button { border-radius: 4px; }
+body:has(#startScreen.active) .button-ghost { background: #fbf5e8; }
+body:has(#startScreen.active) .modal-card { border-radius: 8px; background: #fbf5e8; }
+
 * { box-sizing: border-box; }
 
 body {
@@ -64,6 +115,16 @@ a { color: inherit; text-decoration: none; }
   color: white;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   box-shadow: var(--shadow);
+}
+
+.brand-mark img,
+.main-tile img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  object-fit: contain;
+  image-rendering: auto;
 }
 
 .level-label, .eyebrow {

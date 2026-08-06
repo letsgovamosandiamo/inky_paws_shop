@@ -5,31 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Secret Path — investigate every clue and choose the safest route." />
   <title>Secret Path | Inky Paws Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="game-header">
     <a class="brand" href="../index.html" aria-label="Back to Games Library">
-      <span class="brand-mark" aria-hidden="true">🗺️</span>
+      <span class="brand-mark" aria-hidden="true"><img src="../assets/icons/secret-path-icon.png" alt="" /></span>
       <span>Secret Path</span>
     </a>
-    <span id="levelLabel" class="level-label">Level 1</span>
+    <span id="levelLabel" class="level-label">CASE 01</span>
   </header>
 
   <main class="game-shell">
     <section id="storyScreen" class="screen story-screen active" aria-labelledby="storyTitle">
       <div class="story-copy">
-        <span class="eyebrow">A clue-filled adventure</span>
+        <span class="eyebrow">CASE FILE #002</span>
         <h1 id="storyTitle">Secret Path</h1>
         <p id="storyText">Explore the scene. Follow the clues. Choose the safest route.</p>
         <div class="button-stack">
-          <button id="startButton" class="button button-primary" type="button">Start Game</button>
-          <button id="rulesButton" class="button button-secondary" type="button">How to Play</button>
-          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+          <button id="startButton" class="button button-primary" type="button">Begin Investigation</button>
+          <button id="rulesButton" class="button button-secondary" type="button">Case Notes</button>
+          <a class="button button-ghost" href="../index.html">← Return to Archive</a>
         </div>
       </div>
       <div class="story-art" aria-hidden="true">
-        <div class="route-orbit"><span class="route-icon">🧭</span><span class="route-dot dot-one">?</span><span class="route-dot dot-two">✦</span><span class="route-dot dot-three">➜</span></div>
+        <div class="route-orbit"><span class="route-icon"><img src="../assets/icons/secret-path-icon.png" alt="" /></span><span class="route-dot dot-one">?</span><span class="route-dot dot-two">✦</span><span class="route-dot dot-three">➜</span></div>
       </div>
     </section>
 
@@ -79,8 +82,8 @@
   <div id="rulesModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
       <button id="closeRulesButton" class="modal-close" type="button" aria-label="Close rules">×</button>
-      <span class="eyebrow">Your mission</span>
-      <h2 id="rulesTitle">How to Play</h2>
+      <span class="eyebrow">Investigator Briefing</span>
+      <h2 id="rulesTitle">Case Notes</h2>
       <p>Find the safest way forward by following the clues.</p>
       <ol>
         <li>Explore the scene carefully.</li>

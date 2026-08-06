@@ -3,34 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dice Architect — build the world, follow the rules, and solve the layout." />
-  <title>Dice Architect | Inky Paws Games</title>
+  <meta name="description" content="Master Plan — build the world, follow the rules, and solve the layout." />
+  <title>Master Plan | Inky Paws Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="game-header">
     <a class="brand" href="../index.html" aria-label="Back to Games Library">
-      <span class="brand-mark" aria-hidden="true">DA</span>
-      <span>Dice Architect</span>
+      <span class="brand-mark" aria-hidden="true"><img src="../assets/icons/master-plan-icon.png" alt="" /></span>
+      <span>Master Plan</span>
     </a>
-    <span id="levelLabel" class="level-label">Level 1</span>
+    <span id="levelLabel" class="level-label">CASE 01</span>
   </header>
 
   <main class="game-shell">
     <section id="startScreen" class="screen start-screen active" aria-labelledby="gameTitle">
       <div class="start-copy">
-        <span class="eyebrow">A creative logic challenge</span>
-        <h1 id="gameTitle">Dice Architect</h1>
+        <span class="eyebrow">CASE FILE #003</span>
+        <h1 id="gameTitle">Master Plan</h1>
         <p>Build the world. Follow the rules. Solve the layout.</p>
         <div class="button-stack">
-          <button id="startButton" class="button button-primary" type="button">Start Game</button>
-          <button id="howButton" class="button button-secondary" type="button">How to Play</button>
-          <a class="button button-ghost" href="../index.html">← Back to Games</a>
+          <button id="startButton" class="button button-primary" type="button">Begin Investigation</button>
+          <button id="howButton" class="button button-secondary" type="button">Case Notes</button>
+          <a class="button button-ghost" href="../index.html">← Return to Archive</a>
         </div>
       </div>
       <div class="start-art" aria-hidden="true">
         <div class="architect-orbit">
-          <span class="blueprint-tile main-tile"><i></i><i></i><i></i><i></i></span>
+          <span class="blueprint-tile main-tile"><img src="../assets/icons/master-plan-icon.png" alt="" /></span>
           <span class="mini-block block-one"></span>
           <span class="mini-block block-two"></span>
           <span class="mini-block block-three"></span>
@@ -96,8 +99,8 @@
   <div id="howModal" class="modal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="howTitle">
       <button id="closeHowButton" class="modal-close" type="button" aria-label="Close instructions">×</button>
-      <span class="eyebrow">Your blueprint</span>
-      <h2 id="howTitle">How to Play</h2>
+      <span class="eyebrow">Investigator Briefing</span>
+      <h2 id="howTitle">Case Notes</h2>
       <p>Build the correct layout by following every rule.</p>
       <ol>
         <li>Read the building rules carefully.</li>
