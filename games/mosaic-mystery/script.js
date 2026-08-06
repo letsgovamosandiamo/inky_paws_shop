@@ -25,6 +25,48 @@ const levels = [
     ],
     correctAnswer: 0,
     explanation: "The coffee is still steaming, which means the visitor left only a short time ago."
+  },
+  {
+    title: "The Empty Platform",
+    sceneDescription: "A quiet vintage railway platform in the evening after rain",
+    sceneImage: "assets/images/level-02-empty-platform.png",
+    sceneAspectRatio: "1402 / 1122",
+    correctClue: "a wet umbrella mark and fresh rainwater near an otherwise dry bench",
+    hotspots: [
+      { label: "Wet umbrella mark and fresh rainwater", x: 35, y: 44, width: 31, height: 35, correct: true },
+      { label: "Platform sign", x: 7, y: 15, width: 18, height: 25, correct: false },
+      { label: "Station roof", x: 22, y: 2, width: 55, height: 24, correct: false },
+      { label: "Railway track", x: 10, y: 78, width: 80, height: 17, correct: false }
+    ],
+    question: "Why is the wet mark important?",
+    answers: [
+      "It shows that someone arrived from outside only moments ago.",
+      "It means the station roof is broken.",
+      "It was left there several days ago."
+    ],
+    correctAnswer: 0,
+    explanation: "The fresh water beside the dry bench shows that a wet umbrella was placed there very recently."
+  },
+  {
+    title: "The Forest Cabin",
+    sceneDescription: "A cozy cabin in the forest at dusk, mysterious but not dark or scary",
+    sceneImage: "assets/images/level-03-forest-cabin.png",
+    sceneAspectRatio: "1402 / 1122",
+    correctClue: "a recently extinguished candle beside an open window",
+    hotspots: [
+      { label: "Recently extinguished candle beside the open window", x: 40, y: 51, width: 18, height: 29, correct: true },
+      { label: "Cabin door", x: 56, y: 54, width: 13, height: 32, correct: false },
+      { label: "Moon", x: 75, y: 7, width: 13, height: 14, correct: false },
+      { label: "Cabin roof", x: 18, y: 14, width: 66, height: 30, correct: false }
+    ],
+    question: "What does the extinguished candle suggest?",
+    answers: [
+      "The candle was never lit.",
+      "A draft from the recently opened window blew it out.",
+      "The candle is too old to burn."
+    ],
+    correctAnswer: 1,
+    explanation: "The open window created a draft that extinguished the candle, suggesting someone opened or used the window recently."
   }
 ];
 
@@ -106,6 +148,7 @@ function startLevel(index) {
   explanationText.textContent = level.explanation;
   showScreen("game");
   showPanel("puzzle");
+
 }
 
 function shuffledPositions(size) {
