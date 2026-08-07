@@ -63,3 +63,24 @@ body:has(#storyScreen.active) .brand,body:has(#storyScreen.active) .level-label,
 body:has(#storyScreen.active) .button-ghost { background:#fbf5e8; }
 body:has(#storyScreen.active) .modal-card { border-radius:8px; background:#fbf5e8; }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms!important; animation-iteration-count: 1!important; transition-duration: .01ms!important; } }
+
+/* Detective Case Archive: shared treatment for every internal game screen. */
+body { --bg-1:#f3ead6; --bg-2:#e7dac0; --surface:#fbf5e8; --surface-soft:#f4ead6; --text:#3d2b20; --muted:#725f4e; --accent:#7b2935; --accent-2:#963b47; --accent-soft:#ddc2b8; --chip:#eadcc4; --border:#c8b494; --shadow:0 14px 30px rgba(61,43,32,.14); background-color:var(--bg-1); background-image:repeating-linear-gradient(0deg,rgba(86,62,42,.025) 0,rgba(86,62,42,.025) 1px,transparent 1px,transparent 4px),linear-gradient(180deg,var(--bg-1),var(--bg-2)); }
+.brand,.level-label,.eyebrow,.stage-heading h2,.success-screen h2,.modal-card h2,.question-card legend,.clue-progress,.button { font-family:"Special Elite",cursive; letter-spacing:0; }
+.brand-mark { border-radius:6px; background:var(--accent); box-shadow:0 7px 16px rgba(61,43,32,.18); }
+.level-label,.eyebrow { border:1px solid rgba(123,41,53,.55); border-radius:3px; background:#f5ead4; }
+.level-label { transform:rotate(-1deg); }
+.button { border-radius:4px; }
+.button-primary { color:#fff8e8; background:var(--accent); }
+.button-secondary,.button-ghost { color:var(--accent); border:1px solid var(--border); background:#fbf5e8; }
+.button:hover,.button:focus-visible { box-shadow:0 8px 18px rgba(61,43,32,.2); }
+.scene { border-color:#f8efd9; border-radius:7px; box-shadow:0 10px 24px rgba(61,43,32,.18); }
+.hotspot { background:rgba(123,41,53,.18); }
+.hotspot:hover,.hotspot:focus-visible { background:rgba(123,41,53,.34); }
+.hotspot::after { color:var(--accent); background:#fff8e8; }
+.clue-panel,.question-card,.success-screen,.modal-card { border-color:#bda98b; border-radius:8px; background-color:rgba(251,245,232,.96); background-image:repeating-linear-gradient(0deg,rgba(86,62,42,.02) 0,rgba(86,62,42,.02) 1px,transparent 1px,transparent 5px); box-shadow:var(--shadow); }
+.latest-clue { border:1px solid #cfbfa3; border-radius:4px; background:#eadcc4; }
+.answer-option { border-radius:5px; background:#f7efdd; }
+.answer-option:has(input:checked) { background:#eadcc4; }
+.success-badge { border-radius:6px; }
+.modal { background:rgba(61,43,32,.48); }
