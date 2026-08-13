@@ -8,6 +8,7 @@ const dateValue = document.querySelector("#date-value");
 const seasonValue = document.querySelector("#season-value");
 const weatherValue = document.querySelector("#weather-value");
 const feelingValue = document.querySelector("#feeling-value");
+const feelingTileImage = document.querySelector(".tile-feelings .tile-icon");
 const soundToggle = document.querySelector("#sound-toggle");
 const fullscreenToggle = document.querySelector("#fullscreen-toggle");
 let lastTrigger = null;
@@ -39,7 +40,6 @@ let pollCounts = {};
 let warmupCategory = "ALL";
 let warmupHistory = [];
 let warmupIndex = -1;
-let pictureCategory = "Any";
 let pictureHistory = [];
 let pictureIndex = -1;
 
@@ -344,7 +344,8 @@ function renderBuzzer() {
 }
 
 const weatherOptions = [["SUNNY", "☀️"], ["CLOUDY", "☁️"], ["RAINY", "🌧️"], ["WINDY", "💨"], ["SNOWY", "❄️"], ["STORMY", "⛈️"], ["FOGGY", "🌫️"]];
-const feelingOptions = [["HAPPY", "😊"], ["EXCITED", "🤩"], ["CALM", "😌"], ["TIRED", "😴"], ["SAD", "😢"], ["ANGRY", "😠"], ["WORRIED", "😟"], ["BORED", "🥱"]];
+const feelingOptions = ["ANGRY", "EMBARRASSED", "EXCITED", "FRUSTRATED", "HAPPY", "PROUD", "SAD", "SCARED"]
+  .map((name) => ({ name, src: `feelings/images/${name.toLowerCase()}.jpg` }));
 
 function renderChoiceGrid(options, type) {
   overlayContent.innerHTML = `<div class="choice-grid ${type}-choices">${options.map(([name, icon]) => `<button type="button" data-choice="${name}"><span aria-hidden="true">${icon}</span><strong>${name}</strong></button>`).join("")}</div>`;
@@ -360,15 +361,46 @@ function renderChoiceGrid(options, type) {
 }
 
 function renderWeather() { renderChoiceGrid(weatherOptions, "weather"); }
-function renderFeelings() { renderChoiceGrid(feelingOptions, "feeling"); }
+function renderFeelings() {
+  const selected = routine.feeling.toUpperCase();
+  overlayContent.innerHTML = `<div class="feeling-grid">${feelingOptions.map((feeling) => `<button type="button" data-feeling="${feeling.name}" aria-pressed="${selected === feeling.name}"><span class="feeling-image"><img src="${feeling.src}" alt="${feeling.name.toLowerCase()} character" /><span class="feeling-image-placeholder" hidden>IMAGE UNAVAILABLE</span></span><strong>${feeling.name}</strong></button>`).join("")}</div>`;
+  overlayContent.querySelectorAll(".feeling-image img").forEach((image) => {
+    const showImage = () => image.classList.add("loaded");
+    const showPlaceholder = () => {
+      image.hidden = true;
+      image.nextElementSibling.hidden = false;
+    };
+    image.addEventListener("load", showImage);
+    image.addEventListener("error", showPlaceholder);
+    if (image.complete) {
+      if (image.naturalWidth) showImage(); else showPlaceholder();
+    }
+  });
+  overlayContent.querySelectorAll("[data-feeling]").forEach((button) => button.addEventListener("click", () => {
+    routine.feeling = button.dataset.feeling[0] + button.dataset.feeling.slice(1).toLowerCase();
+    saveRoutine();
+    closeTool();
+  }));
+}
 
 function restoreDashboardChoices() {
   dayValue.textContent = routine.day;
   dateValue.textContent = routine.date;
   seasonValue.textContent = routine.season;
   weatherValue.textContent = routine.weather;
-  feelingValue.textContent = routine.feeling;
-  feelingValue.hidden = routine.feeling === "?";
+  const selectedFeeling = feelingOptions.find((feeling) => feeling.name === routine.feeling.toUpperCase());
+  feelingValue.textContent = selectedFeeling?.name || "";
+  feelingValue.hidden = !selectedFeeling;
+  feelingTileImage.classList.toggle("selected-feeling-image", Boolean(selectedFeeling));
+  feelingTileImage.src = selectedFeeling?.src || "assets/images/feelings.png";
+  feelingTileImage.alt = selectedFeeling ? `${selectedFeeling.name.toLowerCase()} character` : "";
+  feelingTileImage.setAttribute("aria-hidden", String(!selectedFeeling));
+  feelingTileImage.onerror = selectedFeeling ? () => {
+    feelingTileImage.onerror = null;
+    feelingTileImage.src = "assets/images/feelings.png";
+    feelingTileImage.alt = "Feeling image unavailable";
+    feelingTileImage.setAttribute("aria-hidden", "false");
+  } : null;
 }
 
 function renderRoutineChoice(field, options) {
@@ -551,49 +583,96 @@ function deleteWarmup() {
   renderWarmup();
 }
 
-const pictureCategories = ["Any", "People", "Places", "Objects", "Actions", "Strange Situations", "Story Starters"];
 function allPictures() {
   const builtIn = Array.isArray(globalThis.INKY_PAWS_PICTURE_PROMPTS) ? globalThis.INKY_PAWS_PICTURE_PROMPTS : [];
-  return [...builtIn.map((picture) => ({ ...picture, custom: false })), ...readStoredArray(PICTURE_CUSTOM_KEY).map((picture) => ({ ...picture, custom: true }))];
+  const normalize = (picture, custom, index) => {
+    const file = String(picture.file || picture.src || "").trim();
+    if (!file) return null;
+    const isPath = /^(?:[a-z]+:|\/|\.\.\/|\.\/)/i.test(file);
+    return {
+      id: picture.id || `${custom ? "custom" : "built-in"}-picture-${index}-${file}`,
+      file,
+      src: isPath ? file : `picture-prompts/images/${file}`,
+      feelingsQuestion: picture.feelingsQuestion === true,
+      custom
+    };
+  };
+  return [
+    ...builtIn.map((picture, index) => normalize(picture, false, index)),
+    ...readStoredArray(PICTURE_CUSTOM_KEY).map((picture, index) => normalize(picture, true, index))
+  ].filter(Boolean);
 }
-function eligiblePictures() { return allPictures().filter((picture) => pictureCategory === "Any" || picture.category === pictureCategory); }
 function currentPicture() { return pictureHistory[pictureIndex] || null; }
 
 function renderPicturePrompt() {
+  const library = allPictures();
+  if (!currentPicture() && library.length) {
+    pictureHistory = [library[0]];
+    pictureIndex = 0;
+  }
   const picture = currentPicture();
-  overlayContent.innerHTML = `<div class="content-tool picture-tool"><div class="category-strip">${pictureCategories.map((category) => `<button type="button" data-picture-category="${category}" aria-pressed="${pictureCategory === category}">${category.toUpperCase()}</button>`).join("")}</div><div class="picture-stage">${picture ? `<img src="${escapeHTML(picture.src)}" alt="${escapeHTML(picture.title || "Picture prompt")}" id="prompt-image" /><strong>${escapeHTML(picture.title || "PICTURE PROMPT")}</strong>` : `<div class="picture-empty">PICTURE PROMPTS COMING SOON</div>`}</div><div class="classroom-controls"><button type="button" class="action-primary" id="random-picture">RANDOM PICTURE</button><button type="button" id="previous-picture" ${pictureIndex <= 0 ? "disabled" : ""}>PREVIOUS</button><button type="button" id="next-picture">NEXT</button></div><div class="management-controls"><button type="button" id="add-picture">ADD PICTURE</button><button type="button" id="replace-picture" ${picture?.custom ? "" : "disabled"}>REPLACE</button><button type="button" id="delete-picture" ${picture?.custom ? "" : "disabled"}>DELETE</button></div></div>`;
-  document.querySelector("#prompt-image")?.addEventListener("error", (event) => { event.currentTarget.hidden = true; event.currentTarget.parentElement.insertAdjacentHTML("afterbegin", `<div class="picture-empty">PICTURE UNAVAILABLE</div>`); });
-  overlayContent.querySelectorAll("[data-picture-category]").forEach((button) => button.addEventListener("click", () => { pictureCategory = button.dataset.pictureCategory; pictureHistory = []; pictureIndex = -1; renderPicturePrompt(); }));
+  const questions = [
+    "What can you see?",
+    "What is happening?",
+    "What do you think happened before?",
+    "What do you think will happen next?",
+    ...(picture?.feelingsQuestion ? ["How do you think they feel? Why?"] : [])
+  ];
+  overlayContent.innerHTML = `<div class="content-tool picture-tool"><div class="picture-stage">${picture ? `<img src="${escapeHTML(picture.src)}" alt="Picture prompt" id="prompt-image" />` : `<div class="picture-empty">PICTURE PROMPTS COMING SOON</div>`}</div><div class="picture-questions" aria-label="Discussion questions">${questions.map((question) => `<p>${escapeHTML(question)}</p>`).join("")}</div><div class="classroom-controls picture-controls"><button type="button" class="action-primary" id="random-picture" ${library.length ? "" : "disabled"}>RANDOM PICTURE</button><button type="button" id="previous-picture" ${pictureIndex <= 0 ? "disabled" : ""}>PREVIOUS</button><button type="button" id="next-picture" ${library.length ? "" : "disabled"}>NEXT</button><button type="button" id="back-picture">BACK</button></div><div class="management-controls"><button type="button" id="add-picture">ADD PICTURE</button><button type="button" id="delete-picture" ${picture?.custom ? "" : "disabled"}>REMOVE PICTURE</button></div></div>`;
+  const promptImage = document.querySelector("#prompt-image");
+  const showUnavailablePicture = () => {
+    const stage = promptImage?.parentElement;
+    promptImage?.remove();
+    stage?.insertAdjacentHTML("afterbegin", `<div class="picture-empty">PICTURE UNAVAILABLE</div>`);
+  };
+  promptImage?.addEventListener("load", () => promptImage.classList.add("loaded"));
+  promptImage?.addEventListener("error", showUnavailablePicture);
+  if (promptImage?.complete) {
+    if (promptImage.naturalWidth) promptImage.classList.add("loaded");
+    else showUnavailablePicture();
+  }
   document.querySelector("#random-picture").addEventListener("click", randomPicture);
   document.querySelector("#previous-picture").addEventListener("click", () => { pictureIndex -= 1; renderPicturePrompt(); });
-  document.querySelector("#next-picture").addEventListener("click", () => { if (pictureIndex < pictureHistory.length - 1) { pictureIndex += 1; renderPicturePrompt(); } else randomPicture(); });
+  document.querySelector("#next-picture").addEventListener("click", nextPicture);
+  document.querySelector("#back-picture").addEventListener("click", closeTool);
   document.querySelector("#add-picture").addEventListener("click", () => renderPictureEditor());
-  document.querySelector("#replace-picture").addEventListener("click", () => renderPictureEditor(picture));
   document.querySelector("#delete-picture").addEventListener("click", deletePicture);
 }
 
 function randomPicture() {
-  const eligible = eligiblePictures();
-  if (!eligible.length) { pictureHistory = []; pictureIndex = -1; renderPicturePrompt(); return; }
+  const library = allPictures();
+  if (!library.length) { pictureHistory = []; pictureIndex = -1; renderPicturePrompt(); return; }
   const previousId = currentPicture()?.id;
-  const pool = eligible.length > 1 ? eligible.filter((picture) => picture.id !== previousId) : eligible;
+  const pool = library.length > 1 ? library.filter((picture) => picture.id !== previousId) : library;
   pictureHistory = pictureHistory.slice(0, pictureIndex + 1);
   pictureHistory.push(pool[Math.floor(Math.random() * pool.length)]);
   pictureIndex += 1;
   renderPicturePrompt();
 }
 
-function renderPictureEditor(picture = null) {
-  overlayContent.innerHTML = `<form class="content-editor" id="picture-editor"><h3>${picture ? "REPLACE PICTURE" : "ADD PICTURE"}</h3><label>IMAGE PATH OR URL<input id="picture-src" required value="${picture ? escapeHTML(picture.src) : ""}" /></label><label>TITLE<input id="picture-title" value="${picture ? escapeHTML(picture.title || "") : ""}" /></label><label>CATEGORY<select id="picture-category">${pictureCategories.slice(1).map((value) => `<option ${picture?.category === value ? "selected" : ""}>${value}</option>`).join("")}</select></label><p>Use a browser-accessible path. Image files are not copied into storage.</p><div class="classroom-controls"><button type="submit" class="action-primary">SAVE PICTURE</button><button type="button" id="cancel-picture">CANCEL</button></div></form>`;
+function nextPicture() {
+  const library = allPictures();
+  if (!library.length) return;
+  const currentLibraryIndex = library.findIndex((picture) => picture.id === currentPicture()?.id);
+  const next = library[(currentLibraryIndex + 1 + library.length) % library.length];
+  pictureHistory = pictureHistory.slice(0, pictureIndex + 1);
+  pictureHistory.push(next);
+  pictureIndex += 1;
+  renderPicturePrompt();
+}
+
+function renderPictureEditor() {
+  overlayContent.innerHTML = `<form class="content-editor" id="picture-editor"><h3>ADD PICTURE</h3><label>IMAGE FILE NAME<input id="picture-file" required placeholder="picture-001.jpg" /></label><label class="picture-feelings-option"><input type="checkbox" id="picture-feelings" /> SHOW “HOW DO YOU THINK THEY FEEL? WHY?”</label><p>Place the image in <strong>teacher-tools/picture-prompts/images/</strong>, then enter its exact file name here.</p><div class="classroom-controls"><button type="submit" class="action-primary">SAVE PICTURE</button><button type="button" id="cancel-picture">CANCEL</button></div></form>`;
   document.querySelector("#picture-editor").addEventListener("submit", (event) => {
     event.preventDefault();
     const custom = readStoredArray(PICTURE_CUSTOM_KEY);
-    const item = { id: picture?.id || `custom-picture-${Date.now()}`, src: document.querySelector("#picture-src").value.trim(), title: document.querySelector("#picture-title").value.trim(), category: document.querySelector("#picture-category").value };
-    if (!item.src) return;
-    const index = custom.findIndex((entry) => entry.id === item.id);
-    if (index >= 0) custom[index] = item; else custom.push(item);
+    const item = { id: `custom-picture-${Date.now()}`, file: document.querySelector("#picture-file").value.trim(), feelingsQuestion: document.querySelector("#picture-feelings").checked };
+    if (!item.file) return;
+    custom.push(item);
     localStorage.setItem(PICTURE_CUSTOM_KEY, JSON.stringify(custom));
-    pictureCategory = item.category; pictureHistory = [{ ...item, custom: true }]; pictureIndex = 0;
+    const saved = allPictures().find((picture) => picture.id === item.id);
+    pictureHistory = saved ? [saved] : [];
+    pictureIndex = saved ? 0 : -1;
     renderPicturePrompt();
   });
   document.querySelector("#cancel-picture").addEventListener("click", renderPicturePrompt);
@@ -601,9 +680,10 @@ function renderPictureEditor(picture = null) {
 
 function deletePicture() {
   const picture = currentPicture();
-  if (!picture?.custom || !globalThis.confirm("Delete this custom picture?")) return;
+  if (!picture?.custom || !globalThis.confirm("Remove this custom picture?")) return;
   localStorage.setItem(PICTURE_CUSTOM_KEY, JSON.stringify(readStoredArray(PICTURE_CUSTOM_KEY).filter((entry) => entry.id !== picture.id)));
-  pictureHistory.splice(pictureIndex, 1); pictureIndex = Math.min(pictureIndex, pictureHistory.length - 1);
+  pictureHistory = pictureHistory.filter((entry) => entry.id !== picture.id);
+  pictureIndex = Math.min(pictureIndex, pictureHistory.length - 1);
   renderPicturePrompt();
 }
 
