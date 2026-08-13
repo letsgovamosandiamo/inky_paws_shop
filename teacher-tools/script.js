@@ -30,6 +30,7 @@ let diceCount = 1;
 let previousLetter = "";
 let letterMode = localStorage.getItem(LETTER_MODE_KEY) || "A–Z";
 let audioContext = null;
+let activeBuzzer = null;
 let soundEnabled = localStorage.getItem(SOUND_KEY) !== "false";
 let routine = loadRoutine();
 let wheelMode = "NUMBERS 1–6";
@@ -85,18 +86,68 @@ function prepareAudio() {
 
 function playTone(kind = "bell") {
   if (!soundEnabled) return;
+  if (kind === "buzzer") {
+    playBuzzer();
+    return;
+  }
   const context = prepareAudio();
   if (!context) return;
   const oscillator = context.createOscillator();
   const gain = context.createGain();
-  oscillator.type = kind === "buzzer" ? "square" : "sine";
-  oscillator.frequency.setValueAtTime(kind === "buzzer" ? 220 : 740, context.currentTime);
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(740, context.currentTime);
   if (kind === "bell") oscillator.frequency.exponentialRampToValueAtTime(1040, context.currentTime + .18);
   gain.gain.setValueAtTime(.16, context.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + (kind === "buzzer" ? .22 : .55));
+  gain.gain.exponentialRampToValueAtTime(.001, context.currentTime + .55);
   oscillator.connect(gain).connect(context.destination);
   oscillator.start();
-  oscillator.stop(context.currentTime + (kind === "buzzer" ? .22 : .55));
+  oscillator.stop(context.currentTime + .55);
+}
+
+function stopBuzzer() {
+  if (!activeBuzzer) return;
+  const { context, masterGain, oscillators } = activeBuzzer;
+  activeBuzzer = null;
+  masterGain.gain.cancelScheduledValues(context.currentTime);
+  masterGain.gain.setValueAtTime(.0001, context.currentTime);
+  oscillators.forEach((oscillator) => {
+    try { oscillator.stop(context.currentTime); } catch { /* The oscillator may already have ended. */ }
+  });
+}
+
+function playBuzzer() {
+  if (!soundEnabled) return;
+  const context = prepareAudio();
+  if (!context) return;
+
+  stopBuzzer();
+  const now = context.currentTime;
+  const duration = 1;
+  const masterGain = context.createGain();
+  const oscillators = [145, 153].map((frequency) => {
+    const oscillator = context.createOscillator();
+    const voiceGain = context.createGain();
+    oscillator.type = "square";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    voiceGain.gain.setValueAtTime(.5, now);
+    oscillator.connect(voiceGain).connect(masterGain);
+    oscillator.start(now);
+    oscillator.stop(now + duration);
+    return oscillator;
+  });
+
+  // The close frequencies create an eight-beat-per-second rough, pulsing buzz.
+  masterGain.gain.setValueAtTime(.34, now);
+  masterGain.gain.setValueAtTime(.34, now + duration - .08);
+  masterGain.gain.exponentialRampToValueAtTime(.001, now + duration);
+  masterGain.connect(context.destination);
+
+  const buzzer = { context, masterGain, oscillators };
+  activeBuzzer = buzzer;
+  oscillators[0].addEventListener("ended", () => {
+    if (activeBuzzer === buzzer) activeBuzzer = null;
+    masterGain.disconnect();
+  }, { once: true });
 }
 
 function newTask(name, completed = false) {
@@ -456,9 +507,14 @@ function renderWheel() {
   const entries = getWheelEntries();
   const colors = ["#e5ad3d", "#66875b", "#d97757", "#6d9a88", "#f1cf70", "#8b78a1", "#9dbb78", "#4f7d62", "#dda761", "#7197a0", "#b6ca94", "#cc805f"];
   const gradient = entries?.length ? `conic-gradient(${entries.map((_, index) => `${colors[index % colors.length]} ${(index / entries.length) * 100}% ${((index + 1) / entries.length) * 100}%`).join(",")})` : "var(--pale-sage)";
+  const wheelType = wheelMode === "NUMBERS 1–6" ? "wheel-numbers-6" : wheelMode === "NUMBERS 1–10" ? "wheel-numbers-10" : wheelMode === "COLORS" ? "wheel-colors" : "wheel-words";
+  const wheelLabels = wheelMode === "COLORS" ? "" : (entries || []).map((entry, index) => {
+    const lengthClass = entry.length > 12 ? "wheel-label-extra-long" : entry.length > 8 ? "wheel-label-long" : "";
+    return `<span class="${lengthClass}" style="--item:${index};--count:${entries.length}">${escapeHTML(entry)}</span>`;
+  }).join("");
   overlayContent.innerHTML = `<div class="wheel-tool game-tool">
     <div class="wheel-modes">${[...Object.keys(wheelModes), "CUSTOM"].map((mode) => `<button type="button" data-wheel-mode="${mode}" aria-pressed="${wheelMode === mode}">${mode}</button>`).join("")}</div>
-    ${wheelMode === "CUSTOM" && (!entries.length || wheelEditing) ? `<div class="custom-wheel-editor"><label for="wheel-custom-input">CUSTOM SECTIONS — ONE PER LINE</label><textarea id="wheel-custom-input" rows="5" placeholder="Add 2–12 sections">${escapeHTML((entries || []).join("\n"))}</textarea><button type="button" class="action-primary" id="save-wheel-custom">SAVE SECTIONS</button></div>` : `<div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true">▼</span><div class="wheel-disc" id="wheel-disc" style="background:${gradient};transform:rotate(${wheelRotation}deg)">${(entries || []).map((entry, index) => `<span style="--item:${index};--count:${entries.length}">${escapeHTML(entry)}</span>`).join("")}</div></div><div class="wheel-result" id="wheel-result">${entries?.length ? "READY TO SPIN" : "ADD CUSTOM SECTIONS"}</div><button type="button" class="action-primary spin-button" id="spin-wheel" ${entries?.length ? "" : "disabled"}>SPIN</button>${wheelMode === "CUSTOM" ? `<button type="button" id="edit-wheel-custom">EDIT SECTIONS</button>` : ""}`}
+    ${wheelMode === "CUSTOM" && (!entries.length || wheelEditing) ? `<div class="custom-wheel-editor"><label for="wheel-custom-input">CUSTOM SECTIONS — ONE PER LINE</label><textarea id="wheel-custom-input" rows="5" placeholder="Add 2–12 sections">${escapeHTML((entries || []).join("\n"))}</textarea><button type="button" class="action-primary" id="save-wheel-custom">SAVE SECTIONS</button></div>` : `<div class="wheel-stage"><span class="wheel-pointer" aria-hidden="true">▼</span><div class="wheel-disc ${wheelType}" id="wheel-disc" style="background:${gradient};transform:rotate(${wheelRotation}deg)">${wheelLabels}</div></div><div class="wheel-result" id="wheel-result">${entries?.length ? "READY TO SPIN" : "ADD CUSTOM SECTIONS"}</div><button type="button" class="action-primary spin-button" id="spin-wheel" ${entries?.length ? "" : "disabled"}>SPIN</button>${wheelMode === "CUSTOM" ? `<button type="button" id="edit-wheel-custom">EDIT SECTIONS</button>` : ""}`}
   </div>`;
   overlayContent.querySelectorAll("[data-wheel-mode]").forEach((button) => button.addEventListener("click", () => { wheelMode = button.dataset.wheelMode; wheelEditing = false; wheelRotation = 0; renderWheel(); }));
   document.querySelector("#save-wheel-custom")?.addEventListener("click", () => {
@@ -475,6 +531,13 @@ function renderWheel() {
   document.querySelector("#spin-wheel")?.addEventListener("click", spinWheel);
 }
 
+function getWheelIndexAtPointer(rotation, entryCount) {
+  // Conic gradients start at 12 o'clock and increase clockwise. A clockwise
+  // wheel rotation means the pointer sees the same angle in reverse.
+  const angleAtPointer = ((-rotation % 360) + 360) % 360;
+  return Math.min(entryCount - 1, Math.floor(angleAtPointer / (360 / entryCount)));
+}
+
 function spinWheel() {
   const entries = getWheelEntries();
   const selectedIndex = Math.floor(Math.random() * entries.length);
@@ -488,7 +551,8 @@ function spinWheel() {
   wheelRotation += 1080 + ((targetAngle - currentAngle + 360) % 360);
   disc.style.transform = `rotate(${wheelRotation}deg)`;
   setTimeout(() => {
-    document.querySelector("#wheel-result").textContent = entries[selectedIndex].toUpperCase();
+    const resultIndex = getWheelIndexAtPointer(wheelRotation, entries.length);
+    document.querySelector("#wheel-result").textContent = entries[resultIndex].toUpperCase();
     button.disabled = false;
     playTone("bell");
   }, 1250);
@@ -797,6 +861,7 @@ document.addEventListener("keydown", (event) => {
 });
 soundToggle.addEventListener("click", () => {
   soundEnabled = !soundEnabled;
+  if (!soundEnabled) stopBuzzer();
   localStorage.setItem(SOUND_KEY, String(soundEnabled));
   soundToggle.textContent = soundEnabled ? "SOUND ON" : "SOUND OFF";
   soundToggle.setAttribute("aria-pressed", String(soundEnabled));
