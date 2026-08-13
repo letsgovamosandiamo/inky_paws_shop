@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Classroom tools for Inky Paws teachers." />
+  <title>Inky Paws | Classroom Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="Back to the Inky Paws homepage">
+      <img class="brand-badge" src="assets/images/inky-paws-logo.png" alt="" aria-hidden="true" />
+      <span>Inky Paws</span>
+    </a>
+    <h1>Classroom Toolkit</h1>
+    <div class="header-actions">
+      <button type="button" class="header-control" id="sound-toggle">SOUND ON</button>
+      <button type="button" class="header-control" id="fullscreen-toggle">FULLSCREEN</button>
+      <a class="home-link" href="../index.html">← Home</a>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="info-bar" aria-label="Classroom information">
+      <button type="button" class="info-item" data-tool="Day"><span>Day</span><strong id="day-value">?</strong></button>
+      <button type="button" class="info-item" data-tool="Date"><span>Date</span><strong id="date-value">?</strong></button>
+      <button type="button" class="info-item" data-tool="Season"><span>Season</span><strong id="season-value">?</strong></button>
+      <button type="button" class="info-item" data-tool="Weather"><span>Weather</span><strong id="weather-value">?</strong></button>
+    </section>
+
+    <section class="tool-grid" aria-label="Teacher tools">
+      <button type="button" class="tool-tile tile-feelings" data-tool="Feelings"><img class="tile-icon" src="assets/images/feelings.png" alt="" aria-hidden="true" /><span>Feelings</span><small class="tool-status" id="feeling-value" hidden></small></button>
+      <button type="button" class="tool-tile tile-timer" data-tool="Timer"><img class="tile-icon" src="assets/images/timer.png" alt="" aria-hidden="true" /><span>Timer</span></button>
+      <button type="button" class="tool-tile tile-warmup wide" data-tool="Warm-up Question"><img class="tile-icon" src="assets/images/warm-up-question.png" alt="" aria-hidden="true" /><span>Warm-up Question</span></button>
+      <button type="button" class="tool-tile tile-dice" data-tool="Dice"><img class="tile-icon" src="assets/images/dice.png" alt="" aria-hidden="true" /><span>Dice</span></button>
+      <button type="button" class="tool-tile tile-wheel" data-tool="Wheel"><img class="tile-icon" src="assets/images/wheel.png" alt="" aria-hidden="true" /><span>Wheel</span></button>
+      <button type="button" class="tool-tile tile-letter" data-tool="Random Letter"><img class="tile-icon" src="assets/images/random-letter.png" alt="" aria-hidden="true" /><span>Random Letter</span></button>
+      <button type="button" class="tool-tile tile-buzzer" data-tool="Buzzer"><img class="tile-icon" src="assets/images/buzzer.png" alt="" aria-hidden="true" /><span>Buzzer</span></button>
+      <button type="button" class="tool-tile tile-poll" data-tool="Quick Poll"><img class="tile-icon" src="assets/images/quick-poll.png" alt="" aria-hidden="true" /><span>Quick Poll</span></button>
+      <button type="button" class="tool-tile tile-picture wide" data-tool="Picture Prompt"><img class="tile-icon" src="assets/images/picture-prompt.png" alt="" aria-hidden="true" /><span>Picture Prompt</span></button>
+      <button type="button" class="tool-tile tile-prompt lesson-tasks-tile" data-tool="Lesson Tasks">
+        <img class="tile-icon" src="assets/images/lesson-tasks.png" alt="" aria-hidden="true" /><span>Lesson Tasks</span>
+        <span class="tile-lesson-preview" id="lesson-tile-preview" hidden></span>
+      </button>
+    </section>
+  </main>
+
+  <div class="tool-overlay" id="tool-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title" hidden>
+    <div class="overlay-panel">
+      <h2 id="overlay-title"></h2>
+      <div class="overlay-content" id="overlay-content"><p>Tool coming next</p></div>
+      <button type="button" class="close-button" id="close-overlay">← Back to Dashboard</button>
+    </div>
+  </div>
+
+  <script src="data/warmup-questions.js"></script>
+  <script src="data/picture-prompts.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
