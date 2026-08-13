@@ -498,6 +498,15 @@ const wheelModes = {
   SKILLS: ["Reading", "Listening", "Speaking", "Writing", "Vocabulary", "Grammar"]
 };
 
+const wheelColorValues = {
+  Red: "#d95757",
+  Orange: "#e8913a",
+  Yellow: "#e5c83d",
+  Green: "#57935b",
+  Blue: "#4f82b8",
+  Purple: "#8667aa"
+};
+
 function getWheelEntries() {
   if (wheelMode === "CUSTOM") return readStoredArray(WHEEL_CUSTOM_KEY).filter((entry) => typeof entry === "string" && entry.trim()).slice(0, 12);
   return wheelModes[wheelMode];
@@ -506,7 +515,8 @@ function getWheelEntries() {
 function renderWheel() {
   const entries = getWheelEntries();
   const colors = ["#e5ad3d", "#66875b", "#d97757", "#6d9a88", "#f1cf70", "#8b78a1", "#9dbb78", "#4f7d62", "#dda761", "#7197a0", "#b6ca94", "#cc805f"];
-  const gradient = entries?.length ? `conic-gradient(${entries.map((_, index) => `${colors[index % colors.length]} ${(index / entries.length) * 100}% ${((index + 1) / entries.length) * 100}%`).join(",")})` : "var(--pale-sage)";
+  const segmentColors = (entries || []).map((entry, index) => wheelMode === "COLORS" ? wheelColorValues[entry] : colors[index % colors.length]);
+  const gradient = entries?.length ? `conic-gradient(from 0deg, ${segmentColors.map((color, index) => `${color} ${(index / entries.length) * 100}% ${((index + 1) / entries.length) * 100}%`).join(",")})` : "var(--pale-sage)";
   const wheelType = wheelMode === "NUMBERS 1–6" ? "wheel-numbers-6" : wheelMode === "NUMBERS 1–10" ? "wheel-numbers-10" : wheelMode === "COLORS" ? "wheel-colors" : "wheel-words";
   const wheelLabels = wheelMode === "COLORS" ? "" : (entries || []).map((entry, index) => {
     const lengthClass = entry.length > 12 ? "wheel-label-extra-long" : entry.length > 8 ? "wheel-label-long" : "";
@@ -531,6 +541,13 @@ function renderWheel() {
   document.querySelector("#spin-wheel")?.addEventListener("click", spinWheel);
 }
 
+function getComputedWheelRotation(disc) {
+  const transform = getComputedStyle(disc).transform;
+  if (transform === "none") return 0;
+  const matrix = new DOMMatrixReadOnly(transform);
+  return ((Math.atan2(matrix.b, matrix.a) * 180 / Math.PI) + 360) % 360;
+}
+
 function getWheelIndexAtPointer(rotation, entryCount) {
   // Conic gradients start at 12 o'clock and increase clockwise. A clockwise
   // wheel rotation means the pointer sees the same angle in reverse.
@@ -550,12 +567,18 @@ function spinWheel() {
   const targetAngle = (360 - selectedIndex * segment - segment / 2 + 360) % 360;
   wheelRotation += 1080 + ((targetAngle - currentAngle + 360) % 360);
   disc.style.transform = `rotate(${wheelRotation}deg)`;
-  setTimeout(() => {
-    const resultIndex = getWheelIndexAtPointer(wheelRotation, entries.length);
+  let finished = false;
+  const finishSpin = () => {
+    if (finished || !disc.isConnected) return;
+    finished = true;
+    const finalRotation = getComputedWheelRotation(disc);
+    const resultIndex = getWheelIndexAtPointer(finalRotation, entries.length);
     document.querySelector("#wheel-result").textContent = entries[resultIndex].toUpperCase();
     button.disabled = false;
     playTone("bell");
-  }, 1250);
+  };
+  disc.addEventListener("transitionend", finishSpin, { once: true });
+  setTimeout(finishSpin, 1400);
 }
 
 const pollModes = {
