@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Test the Inky Paws Assistant chatbot." />
+  <title>Inky Paws Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="chat-app">
+    <header class="chat-header">
+      <div class="chat-title-row">
+        <h1>Inky Paws Assistant</h1>
+        <button id="newChatButton" class="new-chat-button" type="button">New chat</button>
+      </div>
+      <p>Ask a question and the assistant will do its best to help.</p>
+    </header>
+
+    <section id="messageHistory" class="message-history" aria-label="Chat messages" aria-live="polite">
+      <div class="message bot-message">Hello! How can I help you today?</div>
+    </section>
+
+    <form id="chatForm" class="chat-form">
+      <label class="visually-hidden" for="messageInput">Your message</label>
+      <input
+        id="messageInput"
+        name="message"
+        type="text"
+        placeholder="Type your message…"
+        autocomplete="off"
+        required
+      />
+      <button id="sendButton" type="submit">Send</button>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

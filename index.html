@@ -617,6 +617,195 @@
       line-height: 1.6;
     }
 
+    .assistant-widget {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 25;
+      font-family: "Comic Sans MS", "Comic Sans", "Trebuchet MS", Arial, sans-serif;
+    }
+
+    .assistant-launcher {
+      min-height: 52px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      float: right;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: var(--radius-pill);
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 14px 30px rgba(177, 31, 143, 0.28);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .assistant-launcher:hover,
+    .assistant-launcher:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(177, 31, 143, 0.34);
+    }
+
+    .assistant-panel {
+      width: min(390px, calc(100vw - 28px));
+      height: min(590px, calc(100dvh - 120px));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: 0 24px 60px rgba(59, 33, 66, 0.24);
+    }
+
+    .assistant-panel[hidden],
+    .assistant-launcher[hidden] {
+      display: none;
+    }
+
+    .assistant-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .assistant-header h2 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .assistant-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .assistant-new-chat,
+    .assistant-close {
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      color: white;
+      background: rgba(255, 255, 255, 0.13);
+      cursor: pointer;
+    }
+
+    .assistant-new-chat {
+      padding: 7px 9px;
+      border-radius: 9px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .assistant-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+    }
+
+    .assistant-messages {
+      min-height: 0;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 17px;
+      background: var(--surface-soft);
+    }
+
+    .assistant-message {
+      max-width: 82%;
+      padding: 10px 13px;
+      border-radius: 15px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .assistant-message-user {
+      align-self: flex-end;
+      color: white;
+      background: var(--accent);
+      border-bottom-right-radius: 4px;
+    }
+
+    .assistant-message-bot {
+      align-self: flex-start;
+      background: var(--chip);
+      border-bottom-left-radius: 4px;
+    }
+
+    .assistant-message-loading {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .assistant-message ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .assistant-message li + li {
+      margin-top: 4px;
+    }
+
+    .assistant-form {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .assistant-input {
+      min-width: 0;
+      flex: 1;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background: white;
+    }
+
+    .assistant-input:focus {
+      border-color: var(--accent);
+      outline: 3px solid var(--accent-soft);
+    }
+
+    .assistant-send {
+      padding: 11px 15px;
+      border: 0;
+      border-radius: 12px;
+      color: white;
+      background: var(--accent);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .assistant-send:disabled,
+    .assistant-input:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     @media (max-width: 940px) {
       .hero-grid,
       .modal-body {
@@ -661,6 +850,22 @@
 
       .modal-info {
         padding: 24px 18px 20px;
+      }
+
+      .assistant-widget {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .assistant-panel {
+        width: calc(100vw - 24px);
+        height: min(560px, calc(100dvh - 100px));
+        border-radius: 20px;
+      }
+
+      .assistant-launcher {
+        min-height: 48px;
+        padding: 10px 15px;
       }
     }
   </style>
@@ -786,6 +991,29 @@
       </div>
     </div>
   </div>
+
+  <aside class="assistant-widget" aria-label="Inky Paws Assistant">
+    <button id="assistantLauncher" class="assistant-launcher" type="button" aria-controls="assistantPanel" aria-expanded="false">
+      <span aria-hidden="true">💬</span>
+      <span>Ask Inky Paws</span>
+    </button>
+
+    <section id="assistantPanel" class="assistant-panel" aria-labelledby="assistantTitle" hidden>
+      <header class="assistant-header">
+        <h2 id="assistantTitle">Inky Paws Assistant</h2>
+        <div class="assistant-header-actions">
+          <button id="assistantNewChat" class="assistant-new-chat" type="button">New chat</button>
+          <button id="assistantClose" class="assistant-close" type="button" aria-label="Close chat">✕</button>
+        </div>
+      </header>
+      <div id="assistantMessages" class="assistant-messages" aria-live="polite"></div>
+      <form id="assistantForm" class="assistant-form">
+        <label class="visually-hidden" for="assistantInput">Your message</label>
+        <input id="assistantInput" class="assistant-input" type="text" placeholder="Type a message…" autocomplete="off" required />
+        <button id="assistantSend" class="assistant-send" type="submit">Send</button>
+      </form>
+    </section>
+  </aside>
 
   <script>
     /*
@@ -1025,6 +1253,180 @@
       renderProducts(visibleProducts);
     }
 
+    const assistantUrl = 'https://inky-paws-bot.letsgovamosandiamo.workers.dev/';
+    const assistantStorageKey = 'inkyPawsAssistantHistory';
+    const assistantWelcomeMessage = 'Hello! How can I help you today?';
+    const assistantLauncher = document.getElementById('assistantLauncher');
+    const assistantPanel = document.getElementById('assistantPanel');
+    const assistantClose = document.getElementById('assistantClose');
+    const assistantNewChat = document.getElementById('assistantNewChat');
+    const assistantMessages = document.getElementById('assistantMessages');
+    const assistantForm = document.getElementById('assistantForm');
+    const assistantInput = document.getElementById('assistantInput');
+    const assistantSend = document.getElementById('assistantSend');
+    let assistantHistory = [];
+
+    function appendAssistantInlineMarkdown(container, text) {
+      const pattern = /(\*\*[^*\n]+\*\*|\*[^*\n]+\*)/g;
+      let lastIndex = 0;
+
+      text.replace(pattern, (match, _group, offset) => {
+        container.appendChild(document.createTextNode(text.slice(lastIndex, offset)));
+        const element = document.createElement(match.startsWith('**') ? 'strong' : 'em');
+        element.textContent = match.startsWith('**') ? match.slice(2, -2) : match.slice(1, -1);
+        container.appendChild(element);
+        lastIndex = offset + match.length;
+        return match;
+      });
+
+      container.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+
+    function renderAssistantMarkdown(container, text) {
+      const lines = text.split(/\r?\n/);
+      let list = null;
+
+      lines.forEach((line, index) => {
+        const bullet = line.match(/^\s*[-*]\s+(.+)$/);
+        if (bullet) {
+          if (!list) {
+            list = document.createElement('ul');
+            container.appendChild(list);
+          }
+          const item = document.createElement('li');
+          appendAssistantInlineMarkdown(item, bullet[1]);
+          list.appendChild(item);
+          return;
+        }
+
+        list = null;
+        if (index > 0) container.appendChild(document.createElement('br'));
+        appendAssistantInlineMarkdown(container, line);
+      });
+    }
+
+    function saveAssistantHistory() {
+      try {
+        localStorage.setItem(assistantStorageKey, JSON.stringify(assistantHistory));
+      } catch (error) {
+        console.warn('Could not save chat history:', error);
+      }
+    }
+
+    function loadAssistantHistory() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(assistantStorageKey));
+        assistantHistory = Array.isArray(saved)
+          ? saved.filter(item => item && typeof item.text === 'string' && (item.type === 'user' || item.type === 'bot'))
+          : [];
+      } catch (_error) {
+        assistantHistory = [];
+      }
+    }
+
+    function addAssistantMessage(text, type, options = {}) {
+      const message = document.createElement('div');
+      message.className = `assistant-message assistant-message-${type}${options.loading ? ' assistant-message-loading' : ''}`;
+      if (type === 'bot' && !options.loading) renderAssistantMarkdown(message, text);
+      else message.textContent = text;
+      assistantMessages.appendChild(message);
+      assistantMessages.scrollTop = assistantMessages.scrollHeight;
+
+      if (options.save !== false) {
+        assistantHistory.push({ text, type });
+        saveAssistantHistory();
+      }
+      return message;
+    }
+
+    function restoreAssistantHistory() {
+      assistantMessages.innerHTML = '';
+      loadAssistantHistory();
+      if (assistantHistory.length === 0) {
+        addAssistantMessage(assistantWelcomeMessage, 'bot', { save: false });
+        return;
+      }
+      assistantHistory.forEach(message => addAssistantMessage(message.text, message.type, { save: false }));
+    }
+
+    function setAssistantLoading(isLoading) {
+      assistantInput.disabled = isLoading;
+      assistantSend.disabled = isLoading;
+      assistantSend.textContent = isLoading ? 'Sending…' : 'Send';
+    }
+
+    function openAssistant() {
+      assistantPanel.hidden = false;
+      assistantLauncher.hidden = true;
+      assistantLauncher.setAttribute('aria-expanded', 'true');
+      assistantInput.focus();
+    }
+
+    function closeAssistant() {
+      assistantPanel.hidden = true;
+      assistantLauncher.hidden = false;
+      assistantLauncher.setAttribute('aria-expanded', 'false');
+      assistantLauncher.focus();
+    }
+
+    function startNewAssistantChat() {
+      if (assistantHistory.length > 0 && !window.confirm('Clear this conversation and start a new chat?')) return;
+      assistantHistory = [];
+      try {
+        localStorage.removeItem(assistantStorageKey);
+      } catch (error) {
+        console.warn('Could not clear saved chat history:', error);
+      }
+      assistantMessages.innerHTML = '';
+      addAssistantMessage(assistantWelcomeMessage, 'bot', { save: false });
+      assistantInput.focus();
+    }
+
+    async function sendAssistantMessage(event) {
+      event.preventDefault();
+      const userText = assistantInput.value.trim();
+      if (!userText) return;
+
+      addAssistantMessage(userText, 'user');
+      assistantInput.value = '';
+      setAssistantLoading(true);
+      const loadingMessage = addAssistantMessage('Thinking…', 'bot', { loading: true, save: false });
+
+      try {
+        const response = await fetch(assistantUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userText })
+        });
+
+        if (response.status === 429) {
+          loadingMessage.remove();
+          addAssistantMessage('Inky is taking a short break. Please try again later.', 'bot');
+          return;
+        }
+
+        if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+        const data = await response.json();
+        if (typeof data.reply !== 'string') throw new Error('The response did not include a reply');
+
+        loadingMessage.remove();
+        addAssistantMessage(data.reply, 'bot');
+      } catch (error) {
+        console.error('Chatbot request failed:', error);
+        loadingMessage.remove();
+        addAssistantMessage("Sorry, I couldn't get a reply right now. Please try again.", 'bot');
+      } finally {
+        setAssistantLoading(false);
+        assistantInput.focus();
+      }
+    }
+
+    assistantLauncher.addEventListener('click', openAssistant);
+    assistantClose.addEventListener('click', closeAssistant);
+    assistantNewChat.addEventListener('click', startNewAssistantChat);
+    assistantForm.addEventListener('submit', sendAssistantMessage);
+    restoreAssistantHistory();
+
     closeModalBtn.addEventListener('click', closeModal);
     nextSlideBtn.addEventListener('click', nextSlide);
     prevSlideBtn.addEventListener('click', prevSlide);
@@ -1037,6 +1439,9 @@
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && modal.classList.contains('active')) {
         closeModal();
+      }
+      if (event.key === 'Escape' && !assistantPanel.hidden) {
+        closeAssistant();
       }
     });
 
